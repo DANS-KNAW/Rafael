@@ -9,3 +9,6 @@
 /war/
 
 /WebContent/WEB-INF/lib/rafael.jar
+
+/.idea/
+/*.iml
