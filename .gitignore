@@ -1,8 +1,11 @@
 # ignore bin directories
-bin/
+/bin/
+
 
 #ignore build directories
-build/
+/build/
 
 #ignore war directories
-war/
+/war/
+
+/WebContent/WEB-INF/lib/rafael.jar
