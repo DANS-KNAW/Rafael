@@ -94,12 +94,15 @@ public class MediaFragmentServer extends ServerResource {
 		getResponse().setServerInfo(serverInfo);
 		
 		File resource = new File(basePath+fileIdentifier);
+		LOG.debug("Resource to get = " + resource);
 		
 		// check if requested file exists
 		if (resource.exists() && resource.isFile()) {
+			LOG.debug("Resource exists and is a file");
 			// check if we support this type
 			String extension = fileIdentifier.lastIndexOf(".") == -1 ? "" : fileIdentifier.substring(fileIdentifier.lastIndexOf(".")+1);
 			if (!supportedExtension(extension)) {
+				LOG.debug("Extesion " + extension + "is not supported");
 				getResponse().setStatus(Status.SERVER_ERROR_NOT_IMPLEMENTED);
 				return;
 			}
