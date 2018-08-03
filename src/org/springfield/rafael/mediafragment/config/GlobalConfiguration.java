@@ -35,6 +35,7 @@ import org.apache.log4j.Layout;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
+import org.apache.log4j.xml.DOMConfigurator;
 import org.springfield.rafael.mediafragment.config.GlobalConfiguration;
 
 /**
@@ -46,7 +47,8 @@ import org.springfield.rafael.mediafragment.config.GlobalConfiguration;
  *
  */
 
-public class GlobalConfiguration {	
+public class GlobalConfiguration {
+	private static Logger LOG = Logger.getLogger(GlobalConfiguration.class);
 	private Properties properties;
 	
 	private static GlobalConfiguration instance;
@@ -85,7 +87,7 @@ public class GlobalConfiguration {
 			if (file.exists()) {
 				properties.loadFromXML(new BufferedInputStream(new FileInputStream(file)));
 			} else {
-				System.out.println("ERROR: cannot load configuration file: "+contextPath+CONFIG_FILE);
+				System.out.println("RAFAEL: ERROR: cannot load configuration file: "+contextPath+CONFIG_FILE);
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -107,36 +109,17 @@ public class GlobalConfiguration {
 	 * @param contextPath
 	 */
 	private void initLogging(String contextPath) {
-		System.out.println("Rafael: Initializing logging");
+		System.out.println("RAFAEL: Initializing logging....");
 
-		// enable appenders
-		String logPath = contextPath.substring(0,contextPath.indexOf("webapps"));
-		logPath += "logs/rafael/rafael.log";	
-
-		try {
-			// default layout
-			Layout layout = new PatternLayout("%-5p: %d{yyyy-MM-dd HH:mm:ss,SSS} %c %x - %m%n");
-				
-			// rolling file appender
-			DailyRollingFileAppender appender1 = new DailyRollingFileAppender(layout,logPath,"'.'yyyy-MM-dd");
-			BasicConfigurator.configure(appender1);
-				
-			// console appender 
-			ConsoleAppender appender2 = new ConsoleAppender(layout);
-			BasicConfigurator.configure(appender2);
+		File xmlConfig = new File("/springfield/rafael/log4j.xml");
+		if (xmlConfig.exists()) {
+			System.out.println("RAFAEL: Reading logging config from XML file at " + xmlConfig);
+			DOMConfigurator.configure(xmlConfig.getAbsolutePath());
+			LOG.info("Logging configured from file: " + xmlConfig);
 		}
-		catch(IOException e) {
-			System.out.println("Got an exception while initializing the logging configuration");
-			e.printStackTrace();
+		else {
+			System.out.println("RAFAEL: Could not find log config at " + xmlConfig);
 		}
-		
-		/*
-		 *  turn off all logging, and enable ERROR logging for the root package
-		 *  use restlet.LoggingResource to enable specific logging
-		 */
-		Logger.getRootLogger().setLevel(Level.OFF);
-		Logger.getLogger(PACKAGE_ROOT).setLevel(Level.INFO);
-			
-		System.out.println("Rafael: Initializing logging done");
+		LOG.info("Initializing logging done.");
 	}
 }

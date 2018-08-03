@@ -43,7 +43,7 @@ public class MediaFragmentInitialListener implements ServletContextListener {
 	private static final long CLEANER_INTERVAL = 15 * 60 * 1000; // every 15 minutes
 	
 	public void contextInitialized(ServletContextEvent event) {
-		System.out.println("Rafael: context created");
+		System.out.println("RAFAEL: context created");
 		ServletContext servletContext = event.getServletContext();
 		
 		//load config
@@ -55,6 +55,6 @@ public class MediaFragmentInitialListener implements ServletContextListener {
 	
 	public void contextDestroyed(ServletContextEvent event) {
 		cleanerTimer.cancel();
-		System.out.println("Rafael: context destroyed");
+		System.out.println("RAFAEL: context destroyed");
 	}
 }
